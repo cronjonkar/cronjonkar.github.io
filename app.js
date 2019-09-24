@@ -17,11 +17,11 @@ app.get('/getContacts', (req, res, next) => {
     console.log(req.query)
 
     if (!authorization) {
-        res.json(`You must send an Authorization header`)
+        res.json({ msg: `You must send an Authorization header`, contactList: [] })
     } else {
 
         if (!organization_id) {
-            res.json(`You must pass and organization id`)
+            res.json({ msg: `You must pass and organization id`, contactList: [] })
         } else {
             const [id] = organization_id.split(' ')
             const [token] = authorization.split(' ')
