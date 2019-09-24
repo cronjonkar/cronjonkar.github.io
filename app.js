@@ -4,7 +4,7 @@ const cors = require('cors');
 const thirdParty = require('./thirdParty')
 
 let app = express()
-const port =process.env.PORT||'5000'
+const port = process.env.PORT || '5000'
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -15,21 +15,26 @@ app.get('/getContacts', (req, res, next) => {
     const { authorization } = req.headers
     const { organization_id } = req.query
     console.log(req.query)
-    
-    if (!authorization) res.json(`You must send an Authorization header`)
 
-    if (!organization_id) res.json(`You must pass and organization id`)
+    if (!authorization) {
+        res.json(`You must send an Authorization header`)
+    } else {
 
-    const [id] = organization_id.split(' ')
-    const [token] = authorization.split(' ')
-    thirdParty.getContacts(id, token).then(result => {
-        // res.status(200).send({ msg: result.msg, contactList: result.data })
-        res.json({ msg: result.msg, contactList: result.data })
+        if (!organization_id) {
+            res.json(`You must pass and organization id`)
+        } else {
+            const [id] = organization_id.split(' ')
+            const [token] = authorization.split(' ')
+            thirdParty.getContacts(id, token).then(result => {
+                // res.status(200).send({ msg: result.msg, contactList: result.data })
+                res.json({ msg: result.msg, contactList: result.data })
+            }
+            ).catch(error => {
+                // res.status(500).send({ msg: error, contactList: [] })
+                res.json({ msg: error, contactList: [] })
+            })
+        }
     }
-    ).catch(error => {
-        // res.status(500).send({ msg: error, contactList: [] })
-        res.json({ msg: error, contactList: [] })
-    })
 
 
 })
